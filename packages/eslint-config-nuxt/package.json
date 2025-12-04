@@ -1,0 +1,16 @@
+{
+  "name": "@task-manager/eslint-config-nuxt",
+  "version": "1.0.0",
+  "private": true,
+  "main": "index.js",
+  "type": "module",
+  "exports": {
+    ".": "./index.js"
+  },
+  "dependencies": {
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-perfectionist": "^4.0.0",
+    "eslint-plugin-tailwindcss": "^3.17.0"
+  }
+}
+

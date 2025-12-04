@@ -1,0 +1,16 @@
+{
+  "name": "@task-manager/eslint-config-nest",
+  "version": "1.0.0",
+  "private": true,
+  "main": "nest.js",
+  "type": "module",
+  "exports": {
+    ".": "./nest.js"
+  },
+  "dependencies": {
+    "@darraghor/eslint-plugin-nestjs-typed": "^5.0.0",
+    "@task-manager/eslint-config-base": "workspace:*",
+    "eslint-config-prettier": "^9.1.0"
+  }
+}
+

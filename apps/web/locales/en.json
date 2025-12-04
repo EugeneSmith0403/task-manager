@@ -1,0 +1,26 @@
+{
+  "tasks": {
+    "title": "Tasks",
+    "create": "Create Task",
+    "edit": "Edit Task",
+    "delete": "Delete",
+    "filter": "Filter by status",
+    "all": "All",
+    "pending": "Pending",
+    "inProgress": "In Progress",
+    "completed": "Completed",
+    "dueDate": "Due Date",
+    "description": "Description",
+    "status": "Status",
+    "actions": "Actions"
+  },
+  "form": {
+    "title": "Title",
+    "description": "Description",
+    "status": "Status",
+    "dueDate": "Due Date",
+    "save": "Save",
+    "cancel": "Cancel",
+    "required": "This field is required"
+  }
+}

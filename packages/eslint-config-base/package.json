@@ -1,0 +1,20 @@
+{
+  "name": "@task-manager/eslint-config-base",
+  "version": "1.0.0",
+  "private": true,
+  "main": "base.js",
+  "type": "module",
+  "exports": {
+    ".": "./base.js"
+  },
+  "dependencies": {
+    "@typescript-eslint/eslint-plugin": "^8.0.0",
+    "@typescript-eslint/parser": "^8.0.0",
+    "eslint": "^9.0.0",
+    "eslint-plugin-no-use-extend-native": "^0.7.2",
+    "eslint-plugin-perfectionist": "^4.0.0",
+    "eslint-plugin-promise": "^6.1.1",
+    "typescript-eslint": "^8.0.0"
+  }
+}
+
