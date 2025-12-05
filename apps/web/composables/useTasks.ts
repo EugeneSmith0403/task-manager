@@ -1,4 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/vue-query';
+import { computed, toValue, type Ref, type ComputedRef } from 'vue';
 
 export interface ITask {
   id: string;
@@ -24,27 +25,56 @@ export interface IUpdateTaskDto {
   dueDate?: string;
 }
 
-const config = useRuntimeConfig();
+function getApiBase(): string {
+  const config = useRuntimeConfig();
+  return config.public.apiBase;
+}
 
-const apiBase = config.public.apiBase;
+export interface ITasksQueryParams {
+  title?: string;
+  status?: string[];
+  sortBy?: string;
+}
 
-export const useTasksQuery = (status?: string, sortBy = 'dueDate') => {
+export const useTasksQuery = (params?: ITasksQueryParams | Ref<ITasksQueryParams> | ComputedRef<ITasksQueryParams>) => {
+  const apiBase = getApiBase();
+  
+  const reactiveParams = computed(() => {
+    const rawParams = toValue(params);
+    return {
+      title: rawParams?.title,
+      status: rawParams?.status,
+      sortBy: rawParams?.sortBy || 'dueDate',
+    };
+  });
+
   return useQuery({
-    queryKey: ['tasks', status, sortBy],
+    queryKey: computed(() => [
+      'tasks',
+      reactiveParams.value.title,
+      reactiveParams.value.status,
+      reactiveParams.value.sortBy,
+    ]),
     queryFn: async () => {
-      const params = new URLSearchParams();
-      if (status) params.append('status', status);
-      if (sortBy) params.append('sortBy', sortBy);
+      const { title, status, sortBy } = reactiveParams.value;
+      const searchParams = new URLSearchParams();
+      if (title) searchParams.append('title', title);
+      if (status && status.length > 0) {
+        searchParams.append('status', status.join(','));
+      }
+      if (sortBy) searchParams.append('sortBy', sortBy);
 
-      const response = await fetch(`${apiBase}/tasks?${params.toString()}`);
+      const response = await fetch(`${apiBase}/tasks?${searchParams.toString()}`);
       if (!response.ok) throw new Error('Failed to fetch tasks');
-      return response.json() as Promise<ITask[]>;
+      const result = await response.json() as { data?: ITask[]; meta?: unknown } | ITask[];
+      return Array.isArray(result) ? result : (result.data || []);
     },
   });
 };
 
 export const useCreateTaskMutation = () => {
   const queryClient = useQueryClient();
+  const apiBase = getApiBase();
 
   return useMutation({
     mutationFn: async (data: ICreateTaskDto) => {
@@ -64,6 +94,7 @@ export const useCreateTaskMutation = () => {
 
 export const useUpdateTaskMutation = () => {
   const queryClient = useQueryClient();
+  const apiBase = getApiBase();
 
   return useMutation({
     mutationFn: async ({ id, data }: { id: string; data: IUpdateTaskDto }) => {
@@ -83,6 +114,7 @@ export const useUpdateTaskMutation = () => {
 
 export const useDeleteTaskMutation = () => {
   const queryClient = useQueryClient();
+  const apiBase = getApiBase();
 
   return useMutation({
     mutationFn: async (id: string) => {

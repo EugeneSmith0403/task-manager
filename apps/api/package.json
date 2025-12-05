@@ -11,9 +11,9 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "prisma:generate": "prisma generate",
-    "prisma:migrate": "prisma migrate dev",
-    "prisma:seed": "ts-node --compiler-options {\"module\":\"commonjs\"} prisma/seed.ts",
+    "prisma:generate": "cd ../../packages/prisma && prisma generate",
+    "prisma:migrate": "cd ../../packages/prisma && prisma migrate dev",
+    "prisma:seed": "cd ../../packages/prisma && ts-node -r tsconfig-paths/register seed.ts",
     "clean": "rm -rf dist node_modules/.cache"
   },
   "devDependencies": {
@@ -38,9 +38,12 @@
     "ts-jest": "^29.4.6",
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
-    "typescript": "^5.3.3"
+    "typescript": "^5.3.3",
+    "prisma": "^6.19.0"
   },
   "dependencies": {
+    "@nestjs/platform-express": "^11.1.9",
+    "@repo/types": "workspace:*",
     "connect-redis": "^9.0.0",
     "ioredis": "^5.8.2"
   }

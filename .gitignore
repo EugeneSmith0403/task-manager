@@ -44,7 +44,7 @@ lerna-debug.log*
 *.tsbuildinfo
 
 # Prisma
-**/prisma/migrations
+apps/**/prisma/migrations
 
 # IDE
 .idea

@@ -1,6 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsString, IsOptional, IsEnum, IsDateString } from 'class-validator';
-import { TaskStatus } from '@prisma/client';
+import { TaskStatus } from '@repo/types';
 
 export class CreateTaskDto {
   @ApiProperty({ description: 'Task title' })

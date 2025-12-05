@@ -1,10 +1,16 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "types": ["node", "@nuxt/types"],
-    "moduleResolution": "bundler"
+    "types": ["node"],
+    "moduleResolution": "bundler",
+    "skipLibCheck": true
   },
-  "include": ["**/*.ts", "**/*.tsx", "**/*.vue"],
-  "exclude": ["node_modules", ".nuxt", ".output"]
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    "**/*.vue",
+    ".nuxt/**/*"
+  ],
+  "exclude": ["node_modules", ".output"]
 }
 

@@ -7,16 +7,40 @@ on:
     branches: [main, develop]
 
 jobs:
-  lint-and-test:
+  lint:
+    name: Lint
     runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 8.15.0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run linter
+        run: pnpm lint
+
+  test:
+    name: Test
+    runs-on: ubuntu-latest
     services:
       postgres:
         image: postgres:16-alpine
         env:
-          POSTGRES_USER: taskmanager
-          POSTGRES_PASSWORD: taskmanager
-          POSTGRES_DB: taskmanager
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: test
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
@@ -36,12 +60,13 @@ jobs:
           - 6379:6379
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
       - name: Setup pnpm
-        uses: pnpm/action-setup@v2
+        uses: pnpm/action-setup@v4
         with:
-          version: 8
+          version: 8.15.0
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -55,23 +80,52 @@ jobs:
       - name: Generate Prisma Client
         run: pnpm prisma:generate
         env:
-          DATABASE_URL: postgresql://taskmanager:taskmanager@localhost:5432/taskmanager?schema=public
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/test?schema=public
 
-      - name: Run migrations
-        run: pnpm db:migrate
+      - name: Run database migrations
+        run: pnpm --filter @task-manager/prisma migrate:deploy
         env:
-          DATABASE_URL: postgresql://taskmanager:taskmanager@localhost:5432/taskmanager?schema=public
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/test?schema=public
 
-      - name: Lint
-        run: pnpm lint
-
-      - name: Test Backend
-        run: pnpm --filter @task-manager/api test
+      - name: Run tests
+        run: pnpm test
         env:
-          DATABASE_URL: postgresql://taskmanager:taskmanager@localhost:5432/taskmanager?schema=public
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/test
           REDIS_HOST: localhost
           REDIS_PORT: 6379
 
-      - name: Build
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 8.15.0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Generate Prisma Client
+        run: pnpm prisma:generate
+
+      - name: Build project
         run: pnpm build
 
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-artifacts
+          path: |
+            apps/api/dist
+            apps/web/.output
+          retention-days: 7

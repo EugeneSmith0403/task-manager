@@ -1,35 +1,30 @@
 <template>
   <v-select
-    :model-value="modelValue"
+    :model-value="value"
     @update:model-value="handleChange"
+    @blur="handleBlur"
     :items="statusItems"
     :label="label"
     :error-messages="errorMessage ? [errorMessage] : []"
-    :required="required"
     v-bind="$attrs"
   />
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue';
 import { useField } from 'vee-validate';
-import { useId } from 'vue';
 
 export type TStatusValue = 'PENDING' | 'IN_PROGRESS' | 'COMPLETED';
 
 const props = withDefaults(
   defineProps<{
-    modelValue?: TStatusValue;
-    name?: string;
+    name: string;
     label?: string;
-    errorMessage?: string;
     required?: boolean;
     statuses?: Array<{ value: TStatusValue; title: string }>;
   }>(),
   {
-    modelValue: undefined,
-    name: undefined,
     label: 'Status',
-    errorMessage: undefined,
     required: false,
     statuses: () => [
       { value: 'PENDING', title: 'Pending' },
@@ -39,10 +34,7 @@ const props = withDefaults(
   },
 );
 
-const randomName = useId();
-
-const { handleChange } = useField<TStatusValue>(() => props.name ?? randomName, undefined, {
-  syncVModel: props.name ? undefined : 'modelValue',
+const { errorMessage, handleBlur, handleChange, value } = useField<TStatusValue>(() => props.name, undefined, {
   validateOnValueUpdate: false,
 });
 

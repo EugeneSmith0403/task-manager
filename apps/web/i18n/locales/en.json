@@ -1,0 +1,47 @@
+{
+  "nav": {
+    "switchLanguage": "Switch language",
+    "home": "Home",
+    "tasks": "Tasks"
+  },
+  "home": {
+    "welcome": "Welcome to Task Manager",
+    "description": "All your tasks can be viewed here. Manage your tasks efficiently and stay organized.",
+    "viewTasks": "View All Tasks"
+  },
+  "tasks": {
+    "title": "Tasks",
+    "create": "Create Task",
+    "edit": "Edit",
+    "editTask": "Edit Task",
+    "delete": "Delete",
+    "cancel": "Cancel",
+    "deleteConfirmTitle": "Delete Task",
+    "deleteConfirmMessage": "Are you sure you want to delete the task \"{title}\"? This action cannot be undone.",
+    "filter": "Filter by status",
+    "all": "All",
+    "pending": "Pending",
+    "inProgress": "In Progress",
+    "completed": "Completed",
+    "dueDate": "Due Date",
+    "description": "Description",
+    "status": "Status",
+    "actions": "Actions",
+    "noData": "No tasks found"
+  },
+  "form": {
+    "title": "Title",
+    "description": "Description",
+    "status": "Status",
+    "dueDate": "Due Date",
+    "taskId": "Task ID",
+    "save": "Save",
+    "cancel": "Cancel",
+    "required": "This field is required",
+    "errors": {
+      "titleRequired": "Title is required",
+      "dateRequired": "Due date is required",
+      "dateInvalid": "Please enter a valid date in format YYYY-MM-DD"
+    }
+  }
+}

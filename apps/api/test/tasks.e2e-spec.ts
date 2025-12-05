@@ -4,7 +4,7 @@ import * as request from 'supertest';
 import { AppModule } from '../src/app.module';
 import { PrismaService } from '../src/prisma/prisma.service';
 import { RedisService } from '../src/shared/redis/redis.service';
-import { TaskStatus } from '@prisma/client';
+import { TaskStatus } from '@repo/types';
 
 describe('TasksController (e2e)', () => {
   let app: INestApplication;

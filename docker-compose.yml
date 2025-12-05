@@ -31,31 +31,6 @@ services:
       timeout: 5s
       retries: 5
 
-  app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: task-manager-app
-    ports:
-      - '3000:3000'
-      - '3001:3001'
-    environment:
-      DATABASE_URL: postgresql://${POSTGRES_USER:-taskmanager}:${POSTGRES_PASSWORD:-taskmanager}@postgres:5432/${POSTGRES_DB:-taskmanager}?schema=public
-      REDIS_HOST: redis
-      REDIS_PORT: 6379
-      REDIS_PASSWORD: ${REDIS_PASSWORD:-}
-      PORT: 3000
-      NUXT_PUBLIC_API_BASE: http://localhost:3000
-    depends_on:
-      postgres:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
-    volumes:
-      - .:/app
-      - /app/node_modules
-    command: pnpm dev
-
 volumes:
   postgres_data:
   redis_data:

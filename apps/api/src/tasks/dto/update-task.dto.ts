@@ -2,7 +2,7 @@ import { ApiPropertyOptional } from '@nestjs/swagger';
 import { IsString, IsOptional, IsEnum, IsDateString } from 'class-validator';
 import { PartialType } from '@nestjs/swagger';
 import { CreateTaskDto } from './create-task.dto';
-import { TaskStatus } from '@prisma/client';
+import { TaskStatus } from '@repo/types';
 
 export class UpdateTaskDto extends PartialType(CreateTaskDto) {
   @ApiPropertyOptional()

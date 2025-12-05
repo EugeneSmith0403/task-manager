@@ -9,7 +9,13 @@ WORKDIR /app
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY apps/api/package.json ./apps/api/
 COPY apps/web/package.json ./apps/web/
-COPY packages/*/package.json ./packages/*/
+COPY packages/eslint-config-base/package.json ./packages/eslint-config-base/
+COPY packages/eslint-config-nest/package.json ./packages/eslint-config-nest/
+COPY packages/eslint-config-nuxt/package.json ./packages/eslint-config-nuxt/
+COPY packages/shared/package.json ./packages/shared/
+COPY packages/ui/package.json ./packages/ui/
+COPY packages/prisma/package.json ./packages/prisma/
+COPY packages/types/package.json ./packages/types/
 
 RUN pnpm install --frozen-lockfile
 
@@ -29,15 +35,17 @@ WORKDIR /app
 
 ENV NODE_ENV=production
 
+# Копируем node_modules из deps
 COPY --from=deps /app/node_modules ./node_modules
-COPY --from=build /app/apps/api/dist ./apps/api/dist
-COPY --from=build /app/apps/web/.output ./apps/web/.output
-COPY --from=build /app/apps/api/prisma ./apps/api/prisma
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
-COPY apps/api/package.json ./apps/api/
-COPY apps/web/package.json ./apps/web/
+
+# Копируем все файлы из build stage (включая исходники для pnpm dev)
+COPY --from=build /app .
+
+# Копируем и делаем исполняемым entrypoint скрипт
+COPY docker-entrypoint.sh /app/docker-entrypoint.sh
+RUN chmod +x /app/docker-entrypoint.sh
 
 EXPOSE 3000 3001
 
-CMD ["pnpm", "dev"]
+ENTRYPOINT ["/app/docker-entrypoint.sh"]
 

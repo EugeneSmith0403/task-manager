@@ -4,12 +4,10 @@ import { PrismaService } from '../prisma/prisma.service';
 import { RedisService } from '../shared/redis/redis.service';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
-import { TaskStatus } from '@prisma/client';
+import { TaskStatus } from '@repo/types';
 
 describe('TasksService', () => {
   let service: TasksService;
-  let prismaService: PrismaService;
-  let redisService: RedisService;
 
   const mockPrismaService = {
     task: {
@@ -42,8 +40,6 @@ describe('TasksService', () => {
     }).compile();
 
     service = module.get<TasksService>(TasksService);
-    prismaService = module.get<PrismaService>(PrismaService);
-    redisService = module.get<RedisService>(RedisService);
   });
 
   afterEach(() => {
@@ -96,7 +92,7 @@ describe('TasksService', () => {
 
       mockRedisService.get.mockResolvedValue(cachedTasks);
 
-      const result = await service.findAll({ status: TaskStatus.PENDING });
+      const result = await service.findAll({ status: [TaskStatus.PENDING] });
 
       expect(result).toEqual(cachedTasks);
       expect(mockRedisService.get).toHaveBeenCalledWith('tasks:status:PENDING');
@@ -117,7 +113,7 @@ describe('TasksService', () => {
       mockPrismaService.task.findMany.mockResolvedValue(tasks);
       mockRedisService.set.mockResolvedValue(undefined);
 
-      const result = await service.findAll({ status: TaskStatus.PENDING });
+      const result = await service.findAll({ status: [TaskStatus.PENDING] });
 
       expect(result).toEqual(tasks);
       expect(mockPrismaService.task.findMany).toHaveBeenCalled();
